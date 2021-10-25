@@ -28,7 +28,7 @@ def get_data():
 
 def write_to_csv(csv_file_name):
     main_data = get_data()
-    with open(csv_file_name, 'w', encoding='windows-1251') as file:
+    with open(csv_file_name, 'w', encoding='utf-8') as file:
         writer = csv.writer(file)
         for el in main_data:
             writer.writerow(el)
