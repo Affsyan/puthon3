@@ -26,3 +26,6 @@ ERROR = 'error'
 
 # Текущий уровень логирования
 LOGGING_LEVEL = logging.DEBUG
+
+# Имя аккаунта
+ACCOUNT_NAME = 'Guest'

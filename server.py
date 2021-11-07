@@ -1,9 +1,10 @@
 """Программа-сервер"""
-
+import inspect
 import socket
 import sys
 import json
 import logging
+import datetime
 import logs.server_log_config
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_CONNECTIONS, \
     PRESENCE, TIME, USER, ERROR, DEFAULT_PORT
@@ -12,6 +13,22 @@ from common.utils import get_message, send_message
 SERVER_LOGGER = logging.getLogger('server')
 
 
+class Log:
+
+    def __call__(self, func):
+        def decorated(*args, **kwargs):
+            res_func = func(*args, **kwargs)
+            SERVER_LOGGER.info(f'log: {func.__name__}({args}, {kwargs})')
+            if (inspect.stack()[1][3]) == func.__name__ or (inspect.stack()[1][3]) == '<module>':
+                pass
+            else:
+                SERVER_LOGGER.info(f'Функция {func.__name__} была вызвана из функции {inspect.stack()[1][3]} в: '
+                                   f'{datetime.datetime.now()}')
+            return res_func
+        return decorated
+
+
+@Log()
 def process_client_message(message):
     """
     Обработчик сообщений от клиентов, принимает словарь - сообщение от клинта,
@@ -28,6 +45,7 @@ def process_client_message(message):
     }
 
 
+@Log()
 def main():
     """
     Загрузка параметров командной строки, если нет параметров, то задаём значения по умоланию.
